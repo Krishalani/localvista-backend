@@ -27,9 +27,9 @@ cd localvista-tourism-platform/localvista-tourism-platform/local-tourist-system
 npm start
 ```
 
-- API Swagger: https://localhost:7088/swagger (HTTP: http://localhost:5088)  
-- Angular: http://localhost:4200 (frontend only — not used by the API)  
-- Set `src/environments/environment.ts` `apiBaseUrl` if the API port differs.
+- API HTTP: http://localhost:5088 (Swagger HTTPS: https://localhost:7088/swagger)  
+- Angular: http://localhost:4200 — proxies `/api` → `http://localhost:5088` via `proxy.conf.json`  
+- Restart both `dotnet run` and `npm start` after port/proxy changes.
 
 ## Endpoints
 
