@@ -1,0 +1,26 @@
+@https://localhost:7156
+Accept: application/json
+
+### Categories
+GET {{HostAddress}}/api/categories
+
+### Attractions (search + category)
+GET {{HostAddress}}/api/attractions?search=tea&categories=Nature
+
+### Attraction detail
+GET {{HostAddress}}/api/attractions/1
+
+### Admin login
+POST {{HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "Manager123"
+}
+
+### Current admin
+GET {{HostAddress}}/api/auth/me
+
+### Logout
+POST {{HostAddress}}/api/auth/logout
