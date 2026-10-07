@@ -34,9 +34,10 @@ public class AuthController(IAuthService auth) : ControllerBase
 
     [HttpGet("me")]
     [AllowAnonymous]
-    public async Task<ActionResult<AuthUserDto>> Me()
+    public async Task<ActionResult<AuthUserDto?>> Me()
     {
+        // Guests are allowed — return null with 200 so the SPA does not treat this as an error.
         var user = await auth.GetCurrentUserAsync(User);
-        return user is null ? Unauthorized() : Ok(user);
+        return Ok(user);
     }
 }
