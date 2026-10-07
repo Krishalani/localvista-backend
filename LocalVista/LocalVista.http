@@ -1,4 +1,4 @@
-@https://localhost:7156
+@HostAddress = https://localhost:7088
 Accept: application/json
 
 ### Categories

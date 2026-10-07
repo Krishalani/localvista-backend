@@ -27,8 +27,8 @@ cd localvista-tourism-platform/localvista-tourism-platform/local-tourist-system
 npm start
 ```
 
-- API Swagger: https://localhost:7156/swagger  
-- Angular: http://localhost:4200  
+- API Swagger: https://localhost:7088/swagger (HTTP: http://localhost:5088)  
+- Angular: http://localhost:4200 (frontend only — not used by the API)  
 - Set `src/environments/environment.ts` `apiBaseUrl` if the API port differs.
 
 ## Endpoints
