@@ -14,6 +14,7 @@ public class LocalVistaDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Attraction> Attractions => Set<Attraction>();
     public DbSet<AttractionImage> AttractionImages => Set<AttractionImage>();
+    public DbSet<AttractionFeedback> AttractionFeedback => Set<AttractionFeedback>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -34,6 +35,7 @@ public class LocalVistaDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Description).IsRequired();
             entity.Property(e => e.OpeningHours).HasMaxLength(200);
+            entity.Property(e => e.BestVisitMonths).HasMaxLength(40).IsRequired();
             entity.Property(e => e.DistanceKm).HasColumnType("decimal(6,2)");
             entity.Property(e => e.Latitude).HasColumnType("decimal(9,6)");
             entity.Property(e => e.Longitude).HasColumnType("decimal(9,6)");
@@ -55,6 +57,22 @@ public class LocalVistaDbContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(e => e.Attraction)
                 .WithMany(a => a.Images)
+                .HasForeignKey(e => e.AttractionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<AttractionFeedback>(entity =>
+        {
+            entity.ToTable("AttractionFeedback");
+            entity.HasKey(e => e.AttractionFeedbackId);
+            entity.Property(e => e.DisplayName).HasMaxLength(80);
+            entity.Property(e => e.Rating).IsRequired();
+            entity.Property(e => e.Comment).HasMaxLength(1000);
+            entity.Property(e => e.CreatedAtUtc).HasColumnType("datetime2(0)");
+            entity.HasIndex(e => new { e.AttractionId, e.CreatedAtUtc });
+
+            entity.HasOne(e => e.Attraction)
+                .WithMany(a => a.Feedback)
                 .HasForeignKey(e => e.AttractionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });

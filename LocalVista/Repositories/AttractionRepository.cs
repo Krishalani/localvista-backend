@@ -9,6 +9,7 @@ public class AttractionRepository(LocalVistaDbContext db) : IAttractionRepositor
     public async Task<IReadOnlyList<Attraction>> QueryAsync(
         string? search,
         IReadOnlyList<string>? categories,
+        double? maxDistanceKm,
         CancellationToken ct)
     {
         var query = db.Attractions
@@ -20,12 +21,23 @@ public class AttractionRepository(LocalVistaDbContext db) : IAttractionRepositor
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim();
-            query = query.Where(a => a.Name.Contains(term));
+            query = query.Where(a =>
+                a.Name.Contains(term) ||
+                a.Description.Contains(term) ||
+                (a.TravelTips != null && a.TravelTips.Contains(term)) ||
+                (a.OpeningHours != null && a.OpeningHours.Contains(term)) ||
+                a.Category.Name.Contains(term));
         }
 
         if (categories is { Count: > 0 })
         {
             query = query.Where(a => categories.Contains(a.Category.Name));
+        }
+
+        if (maxDistanceKm is >= 0)
+        {
+            var maximumDistance = (decimal)maxDistanceKm.Value;
+            query = query.Where(a => a.DistanceKm <= maximumDistance);
         }
 
         return await query

@@ -19,7 +19,12 @@ public static class AttractionMapper
                 .Select(i => i.ImageUrl)
                 .ToList(),
             attraction.Latitude,
-            attraction.Longitude);
+            attraction.Longitude,
+            attraction.BestVisitMonths
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(value => int.TryParse(value, out var month) ? month : 0)
+                .Where(month => month is >= 1 and <= 12)
+                .ToArray());
 
     public static CategoryDto ToDto(Category category) =>
         new(category.CategoryId, category.Name);

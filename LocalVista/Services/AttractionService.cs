@@ -12,9 +12,10 @@ public class AttractionService(
     public async Task<IReadOnlyList<AttractionDto>> ListAsync(
         string? search,
         IReadOnlyList<string>? categoriesFilter,
+        double? maxDistanceKm,
         CancellationToken ct)
     {
-        var items = await attractions.QueryAsync(search, categoriesFilter, ct);
+        var items = await attractions.QueryAsync(search, categoriesFilter, maxDistanceKm, ct);
         return items.Select(AttractionMapper.ToDto).ToList();
     }
 
@@ -55,6 +56,7 @@ public class AttractionService(
             Description = request.Description.Trim(),
             OpeningHours = request.OpeningHours?.Trim(),
             TravelTips = request.TravelTips?.Trim(),
+            BestVisitMonths = FormatMonths(request.BestVisitMonths),
             DistanceKm = request.DistanceKm,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
@@ -108,6 +110,7 @@ public class AttractionService(
         entity.Description = request.Description.Trim();
         entity.OpeningHours = request.OpeningHours?.Trim();
         entity.TravelTips = request.TravelTips?.Trim();
+        entity.BestVisitMonths = FormatMonths(request.BestVisitMonths);
         entity.DistanceKm = request.DistanceKm;
         entity.Latitude = request.Latitude;
         entity.Longitude = request.Longitude;
@@ -140,6 +143,11 @@ public class AttractionService(
             return "Name, category, and description are required.";
         }
 
+        if ((request.BestVisitMonths ?? Array.Empty<int>()).Any(month => month is < 1 or > 12))
+        {
+            return "Best visiting months must be between 1 and 12.";
+        }
+
         if (NormalizeImages(request.ImageUrls).Count == 0)
         {
             return "At least one image URL is required.";
@@ -153,4 +161,7 @@ public class AttractionService(
             .Select(u => u.Trim())
             .Where(u => u.Length > 0)
             .ToList();
+
+    private static string FormatMonths(IReadOnlyList<int>? months) =>
+        string.Join(',', (months ?? Array.Empty<int>()).Distinct().Order());
 }

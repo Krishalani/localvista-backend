@@ -14,6 +14,7 @@ public class AttractionsController(IAttractionService attractions) : ControllerB
     public async Task<ActionResult<IReadOnlyList<AttractionDto>>> List(
         [FromQuery] string? search,
         [FromQuery] string[]? categories,
+        [FromQuery] double? maxDistanceKm,
         CancellationToken ct)
     {
         var categoryList = categories?
@@ -22,7 +23,7 @@ public class AttractionsController(IAttractionService attractions) : ControllerB
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        var items = await attractions.ListAsync(search, categoryList, ct);
+        var items = await attractions.ListAsync(search, categoryList, maxDistanceKm, ct);
         return Ok(items);
     }
 

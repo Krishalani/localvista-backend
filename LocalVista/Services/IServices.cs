@@ -5,7 +5,7 @@ namespace LocalVista.Services;
 
 public interface IAttractionService
 {
-    Task<IReadOnlyList<AttractionDto>> ListAsync(string? search, IReadOnlyList<string>? categories, CancellationToken ct);
+    Task<IReadOnlyList<AttractionDto>> ListAsync(string? search, IReadOnlyList<string>? categories, double? maxDistanceKm, CancellationToken ct);
     Task<AttractionDto?> GetByIdAsync(int id, CancellationToken ct);
     Task<(AttractionDto? Dto, string? Error)> CreateAsync(AttractionWriteDto request, CancellationToken ct);
     Task<(AttractionDto? Dto, string? Error)> UpdateAsync(int id, AttractionWriteDto request, CancellationToken ct);
@@ -22,4 +22,14 @@ public interface IAuthService
     Task<LoginResponseDto> LoginAsync(LoginRequestDto request, CancellationToken ct);
     Task LogoutAsync();
     Task<AuthUserDto?> GetCurrentUserAsync(ClaimsPrincipal principal);
+}
+
+public interface IFeedbackService
+{
+    Task<FeedbackSummaryDto?> GetForAttractionAsync(int attractionId, CancellationToken ct);
+    Task<(FeedbackDto? Dto, string? Error, bool NotFound)> CreateAsync(
+        int attractionId,
+        FeedbackCreateDto request,
+        CancellationToken ct);
+    Task<IReadOnlyList<AttractionFeedbackSummaryDto>> GetAllForAdminAsync(CancellationToken ct);
 }

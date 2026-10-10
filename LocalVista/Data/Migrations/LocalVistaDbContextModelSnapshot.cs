@@ -102,6 +102,11 @@ namespace LocalVista.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("BestVisitMonths")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2(0)");
 
@@ -165,6 +170,38 @@ namespace LocalVista.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("AttractionImages", (string)null);
+                });
+
+            modelBuilder.Entity("LocalVista.Data.Entities.AttractionFeedback", b =>
+                {
+                    b.Property<int>("AttractionFeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttractionFeedbackId"));
+
+                    b.Property<int>("AttractionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("AttractionFeedbackId");
+
+                    b.HasIndex("AttractionId", "CreatedAtUtc");
+
+                    b.ToTable("AttractionFeedback", (string)null);
                 });
 
             modelBuilder.Entity("LocalVista.Data.Entities.Category", b =>
@@ -343,6 +380,17 @@ namespace LocalVista.Data.Migrations
                     b.Navigation("Attraction");
                 });
 
+            modelBuilder.Entity("LocalVista.Data.Entities.AttractionFeedback", b =>
+                {
+                    b.HasOne("LocalVista.Data.Entities.Attraction", "Attraction")
+                        .WithMany("Feedback")
+                        .HasForeignKey("AttractionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attraction");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -397,6 +445,7 @@ namespace LocalVista.Data.Migrations
             modelBuilder.Entity("LocalVista.Data.Entities.Attraction", b =>
                 {
                     b.Navigation("Images");
+                    b.Navigation("Feedback");
                 });
 
             modelBuilder.Entity("LocalVista.Data.Entities.Category", b =>

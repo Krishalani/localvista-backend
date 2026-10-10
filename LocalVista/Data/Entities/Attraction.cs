@@ -8,6 +8,7 @@ public class Attraction
     public string Description { get; set; } = string.Empty;
     public string? OpeningHours { get; set; }
     public string? TravelTips { get; set; }
+    public string BestVisitMonths { get; set; } = string.Empty;
     public decimal DistanceKm { get; set; }
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
@@ -16,4 +17,5 @@ public class Attraction
 
     public Category Category { get; set; } = null!;
     public ICollection<AttractionImage> Images { get; set; } = new List<AttractionImage>();
+    public ICollection<AttractionFeedback> Feedback { get; set; } = new List<AttractionFeedback>();
 }
